@@ -1,39 +1,21 @@
 class Triangle
-  attr_accessor :x, :y, :z
-  def initialize(x, y, z)
-    @x = x
-    @y = y
-    @z = z
+  def initialize(*args)
+    @sides = *args.sort
   end
 
   def kind
-    if kosher_triangle == true && kosher_triangle2 == true 
-      puts true 
-    else 
-      raise TriangleError 
-    end 
-    
-    if x == y && y == z && x == z
+    raise TriangleError if @sides.any? {|s| s <= 0} or
+      @sides[0]+ @sides[1] <= @sides[2]
+    case @sides.uniq.size
+    when 1
       :equilateral
-    elsif x != y && y != z && z != x
-      :scalene 
-    else 
+    when 2
       :isosceles
-    end 
+    else
+      :scalene
+    end
   end
-  
-  def kosher_triangle 
-    x.positive? && y.positive? && z.positive?
-  end 
-  
-  def kosher_triangle2 
-    x + y > z && x + z > y && y + z > x
-  end 
 end
 
 class TriangleError < StandardError
-  
 end
-
-a = Triangle.new(5, 5, 5)
-a.kind
